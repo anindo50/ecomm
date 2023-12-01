@@ -4,7 +4,7 @@ from .models import User,Shop,ProductCategory,Product,ProductColor,Cart,Order
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["username", "password"]  # Include fields you want to expose in the API
+        fields = ["username", "password"]  
 
 
 class ShopSerializer(serializers.ModelSerializer):

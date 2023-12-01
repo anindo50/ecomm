@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User List Dashboard</title>
+    <style>
+        table {
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>User List Dashboard</h1>
+
+    <h2>Product Categories</h2>
+    <table border="1">
+        <tr>
+            <th>User Name</th>
+            <th>Password</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.password }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Products</h2>
+    <table border="1">
+        <tr>
+            <th>Product Name</th>
+            <th>Shop Name</th>
+            <th>Category Name</th>
+        </tr>
+        {% for prod in product %}
+        <tr>
+            <td>{{ prod.name }}</td>
+            <td>{{ prod.shop.name }}</td>
+            <td>{{ prod.category.name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Product Colors</h2>
+    <table border="1">
+        <tr>
+            <th>Product Name</th>
+            <th>Color</th>
+            <th>Stock</th>
+        </tr>
+        {% for color in productcolour %}
+        <tr>
+            <td>{{ color.product.name }}</td>
+            <td>{{ color.color }}</td>
+            <td>{{ color.stock }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Cart</h2>
+    <table border="1">
+        <tr>
+            <th>User</th>
+            <th>Products</th>
+        </tr>
+        {% for c in cart %}
+        <tr>
+            <td>{{ c.user }}</td>
+            <td>{{ c.products }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Order</h2>
+    <table border="1">
+        <tr>
+            <th>User</th>
+            <th>Products</th>
+        </tr>
+        {% for o in order %}
+        <tr>
+            <td>{{ o.user }}</td>
+            <td>{{ o.products }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>

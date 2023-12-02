@@ -74,6 +74,8 @@ def user_list_dashboard(request):
     productcolour = ProductColor.objects.all()
     cart = Cart.objects.all()
     order = Order.objects.all()
+    for o in order:
+        print(o)
     context = {
         'users': users, "productcategory":productcategory,"product":product,"productcolour":productcolour,"cart":cart,"order":order
     }

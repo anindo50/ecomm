@@ -14,7 +14,7 @@
 <body>
     <h1>User List Dashboard</h1>
 
-    <h2>Product Categories</h2>
+    <h2>User</h2>
     <table border="1">
         <tr>
             <th>User Name</th>
@@ -28,7 +28,7 @@
         {% endfor %}
     </table>
 
-    <h2>Products</h2>
+    
     <table border="1">
         <tr>
             <th>Product Name</th>
@@ -69,7 +69,7 @@
         {% for c in cart %}
         <tr>
             <td>{{ c.user }}</td>
-            <td>{{ c.products }}</td>
+            <td>{{ c.products.name }}</td>
         </tr>
         {% endfor %}
     </table>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Product Review</title>
+</head>
+<body>
+  <h1>Create Product Review</h1>
+  <form id="reviewForm" method="POST" action="/assignment1/review/">
+    {% csrf_token %}
+    <label for="userId">User ID:</label>
+    <input type="text" id="userId" name="userId"><br><br>
+    <label for="productId">Product ID:</label>
+    <input type="text" id="productId" name="productId"><br><br>
+    <label for="content">Review Content:</label><br>
+    <textarea id="content" name="content" rows="4" cols="50"></textarea><br><br>
+    <button type="submit">Submit Review</button>
+  </form>
+
+  <script>
+    document.getElementById('reviewForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const userId = document.getElementById('userId').value;
+      const productId = document.getElementById('productId').value;
+      const content = document.getElementById('content').value;
+
+      fetch('/assignment1/review/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ user: userId, product: productId, content })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Product review created:', data);
+        // Handle success, update UI, etc.
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Handle errors, show error message, etc.
+      });
+    });
+
+    // Helper function to get CSRF token from cookies
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.startsWith(name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  </script>
+</body>
+</html>

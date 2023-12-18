@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 class Shop(models.Model):
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    class Meta:
-        app_label = 'assignment1'
+    def __str__(self):
+        return self.name
         
         
 

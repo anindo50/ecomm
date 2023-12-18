@@ -63,4 +63,4 @@ class OrderSerializer(serializers.ModelSerializer):
 class ProductReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductReview
-        fields = ['user', 'products', 'content']  
+        fields = ['user', 'product', 'content']  

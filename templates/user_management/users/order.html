@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Order</title>
+</head>
+<body>
+  <h1>Create Order</h1>
+  <form id="orderForm">
+    {% csrf_token %}
+    <label for="userId">User ID:</label>
+    <input type="text" id="userId" name="userId"><br><br>
+    <label for="productId">Product ID:</label>
+    <input type="text" id="productId" name="productId"><br><br>
+    <button type="submit">Create Order</button>
+  </form>
+
+  <script>
+    document.getElementById('orderForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const userId = document.getElementById('userId').value;
+      const productId = document.getElementById('productId').value;
+
+      fetch('/assignment1/order/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken') // Include the CSRF token in the request header
+        },
+        body: JSON.stringify({ user: userId, products: productId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Order created:', data);
+        // Handle success, update UI, etc.
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Handle errors, show error message, etc.
+      });
+    });
+
+    // Helper function to get CSRF token from cookies
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.startsWith(name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  </script>
+</body>
+</html>

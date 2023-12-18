@@ -28,6 +28,22 @@
         {% endfor %}
     </table>
 
+    <h2>Shop</h2>
+    <table border="1">
+        <tr>
+            <th>Shop Name</th>
+            <th>Owner Name</th>
+            
+        </tr>
+        {% for s in shop %}
+        <tr>
+            <td>{{ s.name }}(shop id:{{s.id}})</td>
+            <td>{{ s.owner }}</td>
+            
+        </tr>
+        {% endfor %}
+    </table>
+
     <h2>Product</h2>
     <table border="1">
         <tr>
@@ -82,7 +98,7 @@
         </tr>
         {% for o in order %}
         <tr>
-            <td>{{ o.user }}</td>
+            <td>{{ o.user }}, user id {{o.user.id}}</td>
             <td>{{ o.products.name }}</td>
         </tr>
         {% endfor %}

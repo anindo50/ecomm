@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from rest_framework import generics
 from .models import User, Shop, Product, ProductCategory, ProductColor, Cart, Order
 from .serializers import *
@@ -13,32 +13,26 @@ def post(request,serializ):
         return Response(seri.data, status=201)
     return Response(seri.errors, status=400)
 
-def put(request,serializ,model):
-    name = request.data.get('name')  
-    if not name:
-        return Response(status=400)
-
+def put(request,id,serializ,model):
     try:
-        obj = model.objects.get(name=name)
-        serializer = serializ(obj, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=200)
-        return Response(serializer.errors, status=400)
+        obj = model.objects.get(pk=id)
     except model.DoesNotExist:
         return Response(status=404)
 
-def delete(request,serializ,model):
-    name = request.data.get('name') 
-    if not name:
-        return Response(status=400)
+    serializer = serializ(obj, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=200)
+    return Response(serializer.errors, status=400)
 
+def delete(request,id,model):
     try:
-        product = model.objects.get(name=name)
-        product.delete()
-        return Response(status=204)
+        obj = model.objects.get(pk=id)
     except model.DoesNotExist:
         return Response(status=404)
+
+    obj.delete()
+    return Response(status=204)
 
 
 
@@ -54,33 +48,41 @@ def create_user(request):
     return Response(userserializer.errors, status=400)
 
 
-@api_view(['POST','PUT'])
+@api_view(['POST'])
 def create_shop(request):
     if request.method == 'POST':
-        serializer = ShopSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
-    if request.method == 'PUT':
-        shop = put(request,ShopSerializer,Shop)
+        shop = post(request,ShopSerializer)
         return shop
 
-@api_view(['POST'])
-def create_product_category(request):
-    serializer = ProductCategorySerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)
+@api_view(['PUT'])
+def update_shop(request,id):
+    if request.method == 'PUT':
+        shop = put(request,id,ShopSerializer,Shop)
+        return shop
 
-@api_view(['POST'])
+@api_view(['POST','PUT'])
+def create_product_category(request):
+    if request.method == 'POST':
+        cat = post(request,ProductCategorySerializer)
+        return cat
+
+    if request.method == 'PUT':
+        cat = put(request,ProductCategorySerializer,ProductCategorySerializer)
+        return cat
+
+@api_view(['POST','PUT','DELETE'])
 def create_product(request):
-    serializer = ProductSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)
+    if request.method == 'POST':
+        prod = post(request,ProductSerializer)
+        return prod
+
+@api_view(['PUT'])       
+def update_product(request,id):
+
+    if request.method == 'PUT':
+        prod = put(request,id,ProductSerializer,Product)
+        return prod
+
 
 @api_view(['POST'])
 def create_productcolour(request):
@@ -92,13 +94,14 @@ def create_productcolour(request):
 
 @api_view(['POST'])
 def create_cart(request):
-    serializer = CartSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)
-    
-
+    if request.method == 'POST':
+        car = post(request,CartSerializer)
+        return car
+    if request.method == 'PUT':
+        car = put(request,CartSerializer,Cart)
+        return car
+    if request.method == 'DELETE':
+        car = delete(request,CartSerializer,Cart)
 @api_view(['POST'])
 def create_order(request):
     serializer = OrderSerializer(data=request.data)
@@ -114,6 +117,7 @@ def create_review(request):
 
 def user_list_dashboard(request):
     users = User.objects.all()
+    shop = Shop.objects.all()
     productcategory = ProductCategory.objects.all()
     product = Product.objects.all()
     productcolour = ProductColor.objects.all()
@@ -123,7 +127,7 @@ def user_list_dashboard(request):
     for o in order:
         print(o)
     context = {
-        'users': users, "productcategory":productcategory,"product":product,"productcolour":productcolour,"cart":cart,"order":order,"review":review
+        'users': users, "productcategory":productcategory,"product":product,"productcolour":productcolour,"cart":cart,"order":order,"review":review,"shop":shop
     }
 
     return render(request, 'user_management/users/list.html', context)
@@ -132,3 +136,17 @@ def user_list_dashboard(request):
 def home(request):
     return render(request, 'user_management/users/home.html')
 
+def shop_input(request):
+    return render(request, 'user_management/users/shop.html')
+
+def user_input(request):
+    return render(request, 'user_management/users/user.html')
+
+def product_input(request):
+    return render(request, 'user_management/users/product.html')
+
+def order_input(request):
+    return render(request, 'user_management/users/order.html')
+
+def review_input(request):
+    return render(request, 'user_management/users/review.html')
